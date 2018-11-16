@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>Marquee</title>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="mrqe.js"></script>
+</head>
+<body>
+
+<section>
+  <span style="white-space: nowrap;">start 
+    <span id="loop0">hi</span>
+    <span id="loop1" style="display: none">test test test test test test test test test test test test test test test test test test test test test test test test test test</span>
+    <span id="loop2" style="display: none"><a href="https://www.google.com" target="google">Google</a></span>
+    <span id="loop3" style="display: none">test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2</span>
+  end</span>
+</section>
+
+<script type="text/javascript">
+<!--
+
+(function($) {
+        
+        var mrq = new mrqe("section", {
+        	loopcount: 0, // don't change - customer counter
+        	totalitems: 4, // customise total items to display
+        	loop: () => {
+          		// loopcount iterates & repeats
+          		this.loopcount++;
+              if (this.loopcount>(this.totalitems-1)) this.loopcount = 0;
+              
+              // each display element (#loop)
+              for (var i=0; i<this.totalitems; i++) {
+              	$('#loop' + i).toggle(this.loopcount==i); // set off for all except loopcount (on)
+              }
+          }
+        });
+        
+        $("section")
+        		.mouseover(function () {
+            		// pause on mouse over
+                mrq.pause(true);
+        		})
+            .mouseout(function () {
+            		// unpause on mouse leave
+                mrq.pause(false);
+        		});
+})(jQuery);
+
+// -->
+</script>
+
+</body>
