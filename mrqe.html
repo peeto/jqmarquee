@@ -19,18 +19,17 @@
 <!--
 
 (function($) {
-        
+        var loopcount = 0;
+        var totalitems = 4;
         var mrq = new mrqe("section", {
-        	loopcount: 0, // don't change - customer counter
-        	totalitems: 4, // customise total items to display
         	loop: () => {
           		// loopcount iterates & repeats
-          		this.loopcount++;
-              if (this.loopcount>(this.totalitems-1)) this.loopcount = 0;
+          		loopcount++;
+              if (loopcount>(totalitems-1)) loopcount = 0;
               
               // each display element (#loop)
-              for (var i=0; i<this.totalitems; i++) {
-              	$('#loop' + i).toggle(this.loopcount==i); // set off for all except loopcount (on)
+              for (var i=0; i < totalitems; i++) {
+              	$('#loop' + i).toggle(loopcount==i); // set off for all except loopcount (on)
               }
           }
         });
