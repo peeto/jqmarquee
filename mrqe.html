@@ -33,6 +33,15 @@
   end</span>
 </section>
 
+<section id="test4">
+  <span style="white-space: nowrap;">start 
+    <span id="t4loop0">hi</span>
+    <span id="t4loop1" style="display: none">test test test test test test test test test test test test test test test test test test test test test test test test test test</span>
+    <span id="t4loop2" style="display: none"><a href="https://www.google.com" target="google">Google</a></span>
+    <span id="t4loop3" style="display: none">test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2</span>
+  end</span>
+</section>
+
 <script type="text/javascript">
 <!--
 
@@ -141,11 +150,39 @@
             // unpause on mouse leave
             mrq3.pause(false);
         });
+        
+    var loopcount4 = 0;
+    var mrq4 = new mrqe("section#test4", {
+        loop: () => {
+            // loopcount iterates & repeats
+            loopcount4++;
+            if (loopcount4>=totalitems) loopcount4 = 0;
+              
+            // each display element (#loop)
+            for (var i=0; i < totalitems; i++) {
+                $('#t3loop' + i).toggle(loopcount4==i); // set off for all except loopcount (on)
+            }
+        },
+        leftToRight: true
+    });
+    $("section#test4")
+        .mouseover(function () {
+            // pause on mouse over
+             mrq4.pause(true);
+        })
+        .mouseout(function () {
+            // unpause on mouse leave
+            mrq4.pause(false);
+        });
+    var wind4int = window.setInterval(function() {
+        mrq4.rewind();
+    }, 800);
     
     $('window').on('resize', function() {
         mrq1.reloadWidth();
         mrq2.reloadWidth();
         mrq3.reloadWidth();
+        mrq4.reloadWidth();
     });
         
 })(jQuery);
