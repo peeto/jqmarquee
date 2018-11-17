@@ -19,30 +19,32 @@
 <!--
 
 (function($) {
-        var loopcount = 0;
-        var totalitems = 4;
-        var mrq = new mrqe("section", {
-        	loop: () => {
-          		// loopcount iterates & repeats
-          		loopcount++;
-              if (loopcount>=totalitems) loopcount = 0;
+    var loopcount = 0;
+    var totalitems = 4;
+
+    var mrq = new mrqe("section", {
+        loop: () => {
+            // loopcount iterates & repeats
+            loopcount++;
+            if (loopcount>=totalitems) loopcount = 0;
               
-              // each display element (#loop)
-              for (var i=0; i < totalitems; i++) {
-              	$('#loop' + i).toggle(loopcount==i); // set off for all except loopcount (on)
-              }
-          }
-        });
+            // each display element (#loop)
+            for (var i=0; i < totalitems; i++) {
+                $('#loop' + i).toggle(loopcount==i); // set off for all except loopcount (on)
+            }
+        }
+    });
         
-        $("section")
-        		.mouseover(function () {
-            		// pause on mouse over
-                mrq.pause(true);
-        		})
-            .mouseout(function () {
-            		// unpause on mouse leave
-                mrq.pause(false);
-        		});
+    $("section")
+        .mouseover(function () {
+            // pause on mouse over
+             mrq.pause(true);
+        })
+        .mouseout(function () {
+            // unpause on mouse leave
+            mrq.pause(false);
+        });
+
 })(jQuery);
 
 // -->
