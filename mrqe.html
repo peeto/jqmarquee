@@ -1,17 +1,35 @@
 <html>
 <head>
 <title>Marquee</title>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="mrqe.js"></script>
 </head>
 <body>
 
-<section>
+<section id="test1">
   <span style="white-space: nowrap;">start 
-    <span id="loop0">hi</span>
-    <span id="loop1" style="display: none">test test test test test test test test test test test test test test test test test test test test test test test test test test</span>
-    <span id="loop2" style="display: none"><a href="https://www.google.com" target="google">Google</a></span>
-    <span id="loop3" style="display: none">test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2</span>
+    <span id="t1loop0">hi</span>
+    <span id="t1loop1" style="display: none">test test test test test test test test test test test test test test test test test test test test test test test test test test</span>
+    <span id="t1loop2" style="display: none"><a href="https://www.google.com" target="google">Google</a></span>
+    <span id="t1loop3" style="display: none">test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2</span>
+  end</span>
+</section>
+
+<section id="test2">
+  <span style="white-space: nowrap;">start 
+    <span id="t2loop0">hi</span>
+    <span id="t2loop1" style="display: none">test test test test test test test test test test test test test test test test test test test test test test test test test test</span>
+    <span id="t2loop2" style="display: none"><a href="https://www.google.com" target="google">Google</a></span>
+    <span id="t2loop3" style="display: none">test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2</span>
+  end</span>
+</section>
+
+<section id="test3">
+  <span style="white-space: nowrap;">start 
+    <span id="t3loop0">hi</span>
+    <span id="t3loop1" style="display: none">test test test test test test test test test test test test test test test test test test test test test test test test test test</span>
+    <span id="t3loop2" style="display: none"><a href="https://www.google.com" target="google">Google</a></span>
+    <span id="t3loop3" style="display: none">test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2 test2</span>
   end</span>
 </section>
 
@@ -19,32 +37,104 @@
 <!--
 
 (function($) {
-    var loopcount = 0;
     var totalitems = 4;
 
-    var mrq = new mrqe("section", {
+    var loopcount1 = 0;
+    var mrq1 = new mrqe("section#test1", {
         loop: () => {
             // loopcount iterates & repeats
-            loopcount++;
-            if (loopcount>=totalitems) loopcount = 0;
+            loopcount1++;
+            if (loopcount1>=totalitems) loopcount1 = 0;
               
             // each display element (#loop)
             for (var i=0; i < totalitems; i++) {
-                $('#loop' + i).toggle(loopcount==i); // set off for all except loopcount (on)
+                $('#t1loop' + i).toggle(loopcount1==i); // set off for all except loopcount (on)
             }
         }
     });
-        
-    $("section")
+    $("section#test1")
         .mouseover(function () {
             // pause on mouse over
-             mrq.pause(true);
+             mrq1.pause(true);
         })
         .mouseout(function () {
             // unpause on mouse leave
-            mrq.pause(false);
+            mrq1.pause(false);
         });
 
+    var loopcount2 = 0;
+    var mrq2 = new mrqe("section#test2", {
+        loop: () => {
+            // loopcount iterates & repeats
+            loopcount2++;
+            if (loopcount2>=totalitems) loopcount2 = 0;
+              
+            // each display element (#loop)
+            for (var i=0; i < totalitems; i++) {
+                $('#t2loop' + i).toggle(loopcount2==i); // set off for all except loopcount (on)
+            }
+        },
+        leftToRight: true
+    });
+    var speed = 1e1;
+    var timer = null;
+    function slowdownTest2(newspeed=false) {
+        if (newspeed!==false) speed = newspeed;
+        mrq2.speed(speed);
+        speed++;
+        if (timer) window.clearTimeout(timer);
+        timer = window.setTimeout(function(){
+            slowdownTest2();
+        }, 10);
+    }
+    $("section#test2")
+        .mouseover(function () {
+            slowdownTest2(1e1);
+        })
+        .mouseout(function () {
+            if (timer) window.clearTimeout(timer);
+            mrq2.speed(1e1);
+        });
+        
+    var loopcount3 = 0;
+    var mrq3 = new mrqe("section#test3", {
+        loop: () => {
+            // loopcount iterates & repeats
+            loopcount3++;
+            if (loopcount3>=totalitems) loopcount3 = 0;
+              
+            // each display element (#loop)
+            for (var i=0; i < totalitems; i++) {
+                $('#t3loop' + i).toggle(loopcount3==i); // set off for all except loopcount (on)
+            }
+        },
+        end: function () {
+            console.log('Restarting Test 3 in 5 seconds');
+            window.setTimeout(function () {
+                loopcount3 = -1;
+                mrq3.reload();
+                mrq3.start();
+            }, 5000);
+        },
+        count: 4,
+        speed: 1
+    });
+    $("section#test3")
+        .mouseover(function () {
+            // pause on mouse over
+             mrq3.pause(true);
+        })
+        .mouseout(function () {
+            // unpause on mouse leave
+            mrq3.pause(false);
+        });
+    
+    $('window').on('resize', function() {
+        mrq1.reloadWidth();
+        mrq2.reloadWidth();
+        mrq3.reloadWidth();
+    });
+        
 })(jQuery);
 
 // -->

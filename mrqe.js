@@ -12,15 +12,29 @@
         return width;
     };
        
-    mrqe = function(cntrname, args) {
-        this.that = cntrname;
-        this.textWidth = $(this.that).textWidth();
-        this.offset = $(this.that).width();
-        this.width = this.offset;
+    mrqe = function(selector, args) {
+        this.selector = selector;
+        var me = this;
+        this.textWidth = $(this.selector).textWidth();
+        this.offset = $(this.selector).width();
+        this.i = 0;
+        this.dfd = $.Deferred();
+        
+        this.setWidth = function () {
+            if(me.args && me.args.leftToRight) {
+                me.width = me.textWidth*-1;
+                me.stop = me.offset;
+            } else {
+                me.width = me.offset;
+                me.stop = me.textWidth*-1;
+            }
+        }
+        
+        this.setWidth();
         this.css = {
-            'text-indent' : $(this.that).css('text-indent'),
-            'overflow' : $(this.that).css('overflow'),
-            'white-space' : $(this.that).css('white-space')
+            'text-indent' : $(this.selector).css('text-indent'),
+            'overflow' : $(this.selector).css('overflow'),
+            'white-space' : $(this.selector).css('white-space')
         }
         this.marqueeCss = {
             'text-indent' : this.width,
@@ -34,41 +48,37 @@
                 speed: 1e1,
                 leftToRight: false,
                 pause: false,
-                loop: function() {}
+                loop: function() {},
+                start: function() {
+                    me.play();
+                },
+                end: function() {}
             }, 
             args
         );
-        this.i = 0;
-        this.stop = this.textWidth*-1;
-        this.dfd = $.Deferred();
-        var me = this;
            
         this.go = function() {
                 
-            if($(me.that).css('overflow')!='hidden') {
-                $(me.that).css('text-indent', me.width + 'px'); 
-                console.log('dead1');
+            if($(me.selector).css('overflow')!='hidden') {
+                $(me.selector).css('text-indent', me.width + 'px'); 
+                // missing css
                 return false;
             }
-            if(!$(me.that).length) {
-                console.log('dead2');
+            if(!$(me.selector).length) {
+                // no content
                 return me.dfd.reject();
             }
             if(me.width == me.stop) {
                 me.i++;
                 if(me.i == me.args.count) {
-                    $(me.that).css(me.css);
-	            console.log('dead3');
+                    // completed
+                    me.args.end();
                     return me.dfd.resolve();
                 }
-                if(me.args.leftToRight) {
-                    me.width = me.textWidth*-1;
-                } else {
-                    me.width = me.offset;
-                }
+                me.rewind();
                 me.reload();
             }
-            $(me.that).css('text-indent', me.width + 'px');
+            $(me.selector).css('text-indent', me.width + 'px');
             if (!me.args.pause) {
                 if(me.args.leftToRight) {
                     me.width++;
@@ -87,32 +97,37 @@
             }
         }
             
+        this.rewind = function() {
+            me.setWidth();
+        }
+            
         this.play = function() {
             me.i = 0;
-            me.width = me.offset;
+            me.rewind();
             me.args.pause = false;
-            me.args.count = -1;
                 
-            if(me.args.leftToRight) {
-                me.width = me.textWidth*-1;
-                me.width++;
-                me.stop = me.offset;
-            } else {
-                me.width--;            
-            }
-            $(me.that).css(me.marqueeCss);
-            $(me.that).css('overflow', 'hidden');
+            $(me.selector).css(me.marqueeCss);
+            $(me.selector).css('overflow', 'hidden');
             me.go();
             return me.dfd.promise();
         }
             
-        this.reloadWidth = function() {
-            me.textWidth = $(me.that).textWidth();
-            me.stop = me.textWidth*-1;
+        this.start = function() {
+            if (me.args && me.args.start) {
+                me.args.start();
+            } else {
+                me.play();
+            }
         }
-            
+                
+        this.reloadWidth = function() {
+            me.textWidth = $(me.selector).textWidth();
+            me.offset = $(me.selector).width();
+            me.setWidth();
+        }
+        
         this.load = function ( html ) {
-            $(me.that).html( html );
+            $(me.selector).html( html );
             me.reloadWidth();
         }
             
@@ -120,8 +135,16 @@
             me.args.loop();
             me.reloadWidth();
         }
-            
-        this.state = this.play();
+
+        this.speed = function(speed=false) {
+            if (speed===false) {
+                return me.args.speed;
+            } else {
+                me.args.speed = speed;
+            }
+        }
+        
+        this.state = this.start();
     };
 
 })(jQuery);
