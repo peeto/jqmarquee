@@ -25,7 +25,7 @@
         	loop: () => {
           		// loopcount iterates & repeats
           		loopcount++;
-              if (loopcount>(totalitems-1)) loopcount = 0;
+              if (loopcount>=totalitems) loopcount = 0;
               
               // each display element (#loop)
               for (var i=0; i < totalitems; i++) {
