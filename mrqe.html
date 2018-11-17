@@ -76,24 +76,37 @@
         },
         leftToRight: true
     });
-    var speed = 1e1;
+    var speed = 1;
     var timer = null;
+    var haywire = true;
     function slowdownTest2(newspeed=false) {
         if (newspeed!==false) speed = newspeed;
         mrq2.speed(speed);
-        speed++;
         if (timer) window.clearTimeout(timer);
         timer = window.setTimeout(function(){
-            slowdownTest2();
+            if (speed>0.00001) slowdownTest2();
         }, 10);
+        speed /= 1.05;
+    }
+    function speedupTest2(newspeed=false) {
+        if (newspeed!==false) speed = newspeed;
+        mrq2.speed(speed);
+        if (timer) window.clearTimeout(timer);
+        timer = window.setTimeout(function(){
+            if ((haywire && speed<1000) || (!haywire && speed<1)) speedupTest2();
+        }, 10);
+        speed *= 1.05;
     }
     $("section#test2")
         .mouseover(function () {
-            slowdownTest2(1e1);
+            if (timer) window.clearTimeout(timer);
+            slowdownTest2();
         })
         .mouseout(function () {
             if (timer) window.clearTimeout(timer);
-            mrq2.speed(1e1);
+            haywire = !haywire;
+            console.log(haywire?'https://www.youtube.com/watch?v=ygE01sOhzz0':'Cut the chatter, Red Two. Accelerate to attack speed');
+            speedupTest2(speed);
         });
         
     var loopcount3 = 0;
@@ -116,8 +129,7 @@
                 mrq3.start();
             }, 5000);
         },
-        count: 4,
-        speed: 1
+        count: 4
     });
     $("section#test3")
         .mouseover(function () {

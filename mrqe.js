@@ -21,7 +21,7 @@
         this.dfd = $.Deferred();
         
         this.setWidth = function () {
-            if(me.args && me.args.leftToRight) {
+            if (me.args && me.args.leftToRight) {
                 me.width = me.textWidth*-1;
                 me.stop = me.offset;
             } else {
@@ -45,7 +45,9 @@
             true,
             {
                 count: -1,
-                speed: 1e1,
+                speed: 1,
+                cpudelay: 4,
+                cpuspeedratio: 5,
                 leftToRight: false,
                 pause: false,
                 loop: function() {},
@@ -59,18 +61,22 @@
            
         this.go = function() {
                 
-            if($(me.selector).css('overflow')!='hidden') {
+            if ($(me.selector).css('overflow')!='hidden') {
                 $(me.selector).css('text-indent', me.width + 'px'); 
                 // missing css
                 return false;
             }
-            if(!$(me.selector).length) {
+            if (!$(me.selector).length) {
                 // no content
                 return me.dfd.reject();
             }
-            if(me.width == me.stop) {
+            
+            if (
+                (me.args && me.args.leftToRight && me.width >= me.stop) ||
+                ((!me.args || !me.args.leftToRight) && me.width <= me.stop)
+            ) {
                 me.i++;
-                if(me.i == me.args.count) {
+                if (me.i == me.args.count) {
                     // completed
                     me.args.end();
                     return me.dfd.resolve();
@@ -80,13 +86,13 @@
             }
             $(me.selector).css('text-indent', me.width + 'px');
             if (!me.args.pause) {
-                if(me.args.leftToRight) {
-                    me.width++;
+                if (me.args.leftToRight) {
+                    me.width += (me.args.speed * me.args.cpudelay / me.args.cpuspeedratio);
                 } else {
-                    me.width--;
+                    me.width -= (me.args.speed * me.args.cpudelay / me.args.cpuspeedratio);
                 }
             }
-            setTimeout(me.go, me.args.speed);
+            setTimeout(me.go, me.args.cpudelay);
         };
             
         this.pause = function(state=2) {
